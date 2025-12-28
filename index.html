@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Music Admin Panel</h1>
+        </header>
+
+        <section class="card">
+            <h2>Add New Song</h2>
+            <form id="addSongForm">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="artist">Artist</label>
+                    <input type="text" id="artist" required>
+                </div>
+                <div class="form-group">
+                    <label for="album">Album</label>
+                    <input type="text" id="album" required>
+                </div>
+                <div class="form-group">
+                    <label for="audioUrl">Audio URL</label>
+                    <input type="url" id="audioUrl" placeholder="https://..." required>
+                </div>
+                <div class="form-group">
+                    <label for="artworkUrl">Artwork URL</label>
+                    <input type="url" id="artworkUrl" placeholder="https://..." required>
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration (seconds)</label>
+                    <input type="number" id="duration" min="1" required>
+                </div>
+                <button type="submit" class="btn-primary">Add Song</button>
+            </form>
+            <div id="addSongStatus" class="status-message"></div>
+        </section>
+
+        <section class="card">
+            <h2>All Songs</h2>
+            <div id="songsLoading" class="loading">Loading songs...</div>
+            <div id="songsList"></div>
+        </section>
+
+        <section class="card">
+            <h2>Play History</h2>
+            <div id="historyLoading" class="loading">Loading history...</div>
+            <div id="historyList"></div>
+        </section>
+    </div>
+
+    <script src="advance.js"></script>
+</body>
+</html>
