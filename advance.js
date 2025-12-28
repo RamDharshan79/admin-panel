@@ -1,10 +1,13 @@
-// 🔴 CHANGE THIS TO YOUR BACKEND URL
+// 🔴 BACKEND URL
 // Local:
 // const API_BASE_URL = 'http://localhost:3000/api';
 
-// Deployed:
+// Deployed (Render):
 const API_BASE_URL = 'https://music-backend-ohu6.onrender.com/api';
 
+// ----------------------
+// ELEMENTS
+// ----------------------
 const form = document.getElementById('addSongForm');
 const statusMsg = document.getElementById('addSongStatus');
 const songsList = document.getElementById('songsList');
@@ -21,11 +24,13 @@ form.addEventListener('submit', async (e) => {
     const songData = {
         title: document.getElementById('title').value.trim(),
         artist: document.getElementById('artist').value.trim(),
-        album: document.getElementById('album').value.trim(),
-        audio_url: document.getElementById('audioUrl').value.trim(),
-        artwork_url: document.getElementById('artworkUrl').value.trim(),
-        duration: parseInt(document.getElementById('duration').value)
+        album: document.getElementById('album').value.trim() || null,
+        audioUrl: document.getElementById('audioUrl').value.trim(),
+        artworkUrl: document.getElementById('artworkUrl').value.trim() || null,
+        duration: Number(document.getElementById('duration').value) || null
     };
+
+    console.log("🚀 Sending song to backend:", songData);
 
     try {
         const response = await fetch(`${API_BASE_URL}/songs`, {
@@ -34,8 +39,10 @@ form.addEventListener('submit', async (e) => {
             body: JSON.stringify(songData)
         });
 
+        const data = await response.json();
+
         if (!response.ok) {
-            throw new Error('Failed to add song');
+            throw new Error(data.error || 'Failed to add song');
         }
 
         statusMsg.className = 'status-message success';
@@ -75,14 +82,16 @@ async function loadSongs() {
         songsList.innerHTML = songs.map(song => `
             <div class="song-item">
                 <img
-                    src="${song.artwork_url || ''}"
+                    src="${song.artworkUrl || ''}"
                     alt="${escapeHtml(song.title)}"
                     class="song-artwork"
                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22%3E%3Crect fill=%22%233a3a3a%22 width=%2260%22 height=%2260%22/%3E%3C/svg%3E'"
                 >
                 <div class="song-info">
                     <div class="song-title">${escapeHtml(song.title)}</div>
-                    <div class="song-meta">${escapeHtml(song.artist)} • ${escapeHtml(song.album || '')}</div>
+                    <div class="song-meta">
+                        ${escapeHtml(song.artist)} • ${escapeHtml(song.album || '')}
+                    </div>
                     <div class="song-meta">${formatDuration(song.duration)}</div>
                     <div class="song-id">ID: ${song.id}</div>
                 </div>
@@ -115,9 +124,9 @@ async function loadHistory() {
                 <div class="history-song">
                     <div class="song-title">${escapeHtml(item.title)}</div>
                     <div class="song-meta">${escapeHtml(item.artist)}</div>
-                    <div class="song-id">Song ID: ${item.song_id}</div>
+                    <div class="song-id">Song ID: ${item.songId}</div>
                 </div>
-                <div class="history-time">${formatTimestamp(item.played_at)}</div>
+                <div class="history-time">${formatTimestamp(item.playedAt)}</div>
             </div>
         `).join('');
 
